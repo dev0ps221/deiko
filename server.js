@@ -170,3 +170,4 @@ server.listen(
 )
 
 
+new core()

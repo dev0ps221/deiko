@@ -1,7 +1,7 @@
 const path = require('path')
 const actualpath = path.join(__dirname)
 const rootpath = path.join(actualpath,'..')
-const objectspath = path.join(__dirname,'objects')
+const objectspath = path.join(actualpath,'objects')
 const viewspath = path.join(rootpath,'views')
 const assetspath = path.join(rootpath,'assets')
 const actualfile = path.join(actualpath,__filename)
@@ -16,7 +16,7 @@ module.exports = class extends base{
         this.managers = new objects()
     }
     constructor(){
-
+        super()
         this.setManagers()
     }
 

@@ -1,6 +1,5 @@
-const base = require('path').join(__dirname,'base')
-module.exports = class extends base{
-
+module.exports = class{
+    //Evts
 
     registerTrigger(tn,cb){
         this.triggers[tn] = {
@@ -35,12 +34,29 @@ module.exports = class extends base{
         return this.callbacks.hasOwnProperty(tn)?this.callbacks[tn]:null
     }
 
+    getTrigger(tn){
+        return this.callbacks.hasOwnProperty(tn)?this.callbacks[tn]:null
+    }
+
+
+    doTrigger(tn,trigger,data){
+        this.triggered[tn]={trigger,data}
+    }
+
+    undoTrigger(tn){
+        if(this.getTrigger(tn)) delete(this.getTrigger(tn))
+    }
+
     setBaseActions(){
         const actions = [
             [
                 'on',function(triggername,triggercb){
                     this.registerCallBack(triggername,triggercb)
                     this.registerTrigger(triggername,this.getCallBack(triggername))
+                }
+            ],[
+                'trigger',function(triggername,...data){
+                    if(this.getTrigger(triggername)) this.doTrigger(triggername,this.getTrigger(triggername),data)
                 }
             ]
         ]
@@ -51,14 +67,46 @@ module.exports = class extends base{
         )
     }
 
+    eventLoop(){
+        if(this.triggered.length){
+            Object.keys(this.triggered).forEach(
+                tn=>{
+
+                    this.triggered[tn].trigger(...this.triggered[tn].data)
+
+                }
+            )
+            this.triggered = {}
+        }
+
+    }
+
+
+    loop(){
+
+        this.evtsInterval = setInterval(()=>{this.eventLoop()},1500)
+
+    }
+
+    endloop(){
+
+
+        this.clearInterval(this.evtsInterval)
+
+
+    }
+
     constructor(){
-        super()
+
         this.triggers = {}
+        this.triggered={}
         this.callbacks= {}
         this.actions={}
         this.setBaseActions()
-        console.log('we can do ...',this.actions)
-    
+        this.loop()
+   
+        
+
     }
 
 
