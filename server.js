@@ -8,165 +8,42 @@ const path = require('path')
 const sio  = require('socket.io')
 const io   = sio()
 const chats = []
+const core = new (require(path.join(__dirname,'core/core')))
+const root = path.join(__dirname)
 
-function get(socket,...data){
-    socket.on(
-        ...data
-    )
-}
-function post(socket,...data){
-    socket.emit(
-        ...data
-    )
-}
-function startServer(error){
-    let conversations = []
-    let users         = []
-    let sockets       = []
 
-    function getSocket(name){
-        let found = null
-        sockets.forEach(
-            sock=>{
-                if(sock.sockname == name) found = sock
+core.whenReady(
+    ()=>{
+        core.server = new (core.getObject('webserver'))({server,io,express,chats,io,app,root,path,port})
+        core.server.whenReady(
+            ()=>{
+                console.log('vweb server is ready to start')
+                core.server.listen()
             }
         )
-        return found
-    }
-
-
-    function getSocketByUser(name){
-        let found = null
-        sockets.forEach(
-            sock=>{
-                if(sock.username == name) found = sock
+        core.server.when(
+            'listening',(server)=>{
+                console.log('server listening on ...',server.port)
+                core.server.configureIo()
             }
         )
-        return found
     }
+)
 
+//network stuff
+const { networkInterfaces } = require('os');
 
-    function getConversation(name){
-        let found = null 
-        conversations.forEach(
-            conv=>{
-                if(conv.name == name) found = conv
+const nets = networkInterfaces();
+const results = Object.create(null); // Or just '{}', an empty object
+
+for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+        // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+        if (net.family === 'IPv4' && !net.internal) {
+            if (!results[name]) {
+                results[name] = [];
             }
-        )
-        return found
-    }
-
-    io.listen(server)
-    io.on(
-        'connection',(socket)=>{
-            let sockconvs = []
-            let username = null
-            let sockname = `sock#${sockets.length+1}`
-            sockets.push({sockname,socket,username:null})
-            get(
-                socket
-                ,'username'
-                ,(data)=>{
-                    console.log('got username')
-                    username = data.username
-                    if(getSocket(sockname)){
-                        getSocket(sockname).username = username
-                    }
-                    users.push(data)
-                    post(socket,'username',data)
-                }
-            )
-            get(
-                socket
-                ,'conversation'
-                ,(data)=>{
-                    conversations.push(
-                        {id:conversations.length+1,name:`${data.chatname}#${conversations.length+1}`,members:[data]}
-                    )
-                    sockconvs.push(
-                        {id:conversations.length+1,name:`${data.chatname}#${conversations.length+1}`,members:[data]}
-                    )
-                    
-                    post(socket,'/conversation',data)
-                    socket.broadcast.emit(
-                        'conversations',conversations
-                    )
-                    socket.emit(
-                        'conversations',conversations
-                    )
-                }
-            )
-            get(
-                socket
-                ,'joinConversation'
-                ,data=>{
-                    let conv = getConversation(data.chatname)
-                    if(conv){
-                        
-                        conv.members.push(data)
-                        
-                        post(socket,'/conversation',data)
-                        
-                        post(
-                            socket
-                            ,'joinConversation'
-                            ,conv
-                        )
-
-                        conv.members.forEach(
-                            member=>{
-                                
-                                console.log(member.username)
-                                
-                                if(getSocketByUser(member.username)) getSocketByUser(member.username).socket.emit(
-                                    '/actualconversation',conv
-                                )
-
-                            }
-                        )
-
-                        socket.broadcast.emit(
-                            'conversations',conversations
-                        )
-                        socket.emit(
-                            'conversations',conversations
-                        )
-                    }
-                }
-            )
-            socket.broadcast.emit(
-                'conversations',conversations
-            )
-            socket.emit(
-                'conversations',conversations
-            )
+            results[name].push(net.address);
         }
-    )
-
-    app.use(
-        '/sio',express.static(path.join(__dirname,'node_modules/socket.io/client-dist/socket.io.min.js'))
-    )
-
-    app.use(
-        '/',express.static(path.join(__dirname,'assets'))
-    )
-
-    if(error)console.log(error)
-    else{
-        console.log(`listening on port ${port}`)
     }
 }
-
-app.get(
-    '/',(req,res)=>{
-        res.sendFile(
-            path.join(__dirname,'views','home.html')
-        )
-    }
-)
-
-server.listen(
-    port,startServer
-)
-
-
