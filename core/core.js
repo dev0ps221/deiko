@@ -10,7 +10,9 @@ const objects = require(objectspath)
 
 class TTCore{
 
-    constructor()
+    constructor(){
+        
+    }
 
 
 
