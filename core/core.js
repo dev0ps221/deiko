@@ -1,21 +1,35 @@
 const path = require('path')
 const actualpath = path.join(__dirname)
 const rootpath = path.join(actualpath,'..')
-const objectspath = path.join(__dirname,'objects')
+const objectspath = path.join(actualpath,'objects')
 const viewspath = path.join(rootpath,'views')
 const assetspath = path.join(rootpath,'assets')
 const actualfile = path.join(actualpath,__filename)
 const actualfilepath = __filename
-const objects = require(objectspath)
+const objects = require(path.join(actualpath,'objects.js'))
+const base = require(path.join(objectspath,'base'))
+module.exports = class extends base{
+    //Core
 
-class TTCore{
 
-    constructor(){
-        
+    setManagers(){
+        this.managers = new objects()
+
+        this.managers.whenReady(
+            ()=>{
+                this.ready = 1
+            }
+        )
     }
 
+    getObject(name){
+        return this.managers.objs.hasOwnProperty(name) ? this.managers.objs[name] : null
+    }
 
-
+    constructor(){
+        super()
+        this.setManagers()
+    }
 
 
 
