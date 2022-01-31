@@ -50,13 +50,27 @@ module.exports = class{
     setBaseActions(){
         const actions = [
             [
-                'on',function(triggername,triggercb){
+                'on',(triggername,triggercb)=>{
                     this.registerCallBack(triggername,triggercb)
                     this.registerTrigger(triggername,this.getCallBack(triggername))
                 }
             ],[
-                'trigger',function(triggername,...data){
-                    if(this.getTrigger(triggername)) this.doTrigger(triggername,this.getTrigger(triggername),data)
+                'trigger',(triggername,...data)=>{
+
+                    
+                    if(this.getTrigger(triggername)){
+                        this.doTrigger(triggername,this.getTrigger(triggername),data)
+                    }else{
+                        let interv = setInterval(
+                            ()=>{
+                                if(this.getTrigger(triggername)){
+                                    this.doTrigger(triggername,this.getTrigger(triggername),data)
+                                    clearInterval(interv)
+                                }
+                            }
+                        )
+                    }
+                    
                 }
             ]
         ]
@@ -68,15 +82,17 @@ module.exports = class{
     }
 
     eventLoop(){
-        if(this.triggered.length){
-            Object.keys(this.triggered).forEach(
+        
+        if(Object.keys(this.triggers).length){
+            Object.keys(this.triggers).forEach(
                 tn=>{
-
-                    this.triggered[tn].trigger(...this.triggered[tn].data)
-
+                    if(this.triggered.hasOwnProperty(tn)){
+                        console.log('tam')
+                        this.triggered[tn].trigger(...this.triggered[tn].data)
+                        delete(this.triggered[tn])
+                    }
                 }
             )
-            this.triggered = {}
         }
 
     }
@@ -104,8 +120,6 @@ module.exports = class{
         this.actions={}
         this.setBaseActions()
         this.loop()
-   
-        
 
     }
 

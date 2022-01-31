@@ -170,4 +170,8 @@ server.listen(
 )
 
 
-new core()
+new core().on(
+    'ready',(msg,managers)=>{
+        console.log('got ur own event system boooy..')
+    }
+)

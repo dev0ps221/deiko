@@ -14,7 +14,9 @@ module.exports = class extends base{
 
     setManagers(){
         this.managers = new objects()
+        this.isReady()
     }
+
     constructor(){
         super()
         this.setManagers()

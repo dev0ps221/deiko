@@ -15,6 +15,15 @@ module.exports = class {
     }
 
 
+    isReady(...data){
+
+        this.ready = 1
+
+        this.trigger(
+            'ready',...data
+         )
+    }
+
     on(ev,cb){
 
         this.evt.actions.on(
@@ -28,6 +37,7 @@ module.exports = class {
         this.evt.actions.trigger(
             ev,...data
         )
+
     }
 
     getId(){
