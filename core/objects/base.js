@@ -1,4 +1,5 @@
 const path = require('path')
+const { clearInterval } = require('timers')
 module.exports = class {
 
 
@@ -17,14 +18,14 @@ module.exports = class {
 
     isReady(...data){
 
-        this.ready = 1
 
         this.trigger(
             'ready',...data
-         )
+        )
+
     }
 
-    on(ev,cb){
+    when(ev,cb){
 
         this.evt.actions.on(
             ev,cb
@@ -40,6 +41,12 @@ module.exports = class {
 
     }
 
+    whenReady(cb){
+        this.when(
+            'ready',cb
+        )
+    }
+
     getId(){
         return this.hasOwnProperty('id') ? this.id : null
     }
@@ -52,8 +59,16 @@ module.exports = class {
         return this.hasOwnProperty(prop) ? this[prop] : null
     }
 
+    checkReady(){
+        if(this.ready){
+            clearInterval(this.checkReadyInterval)
+            this.isReady()
+        }
+    }
+
     constructor(data=null){
         this.clearData()
+        this.checkReadyInterval = setInterval(()=>{this.checkReady()},500)
         this.evt=new (require(path.join(__dirname,'events')))
         if(data)this.assigndata(data)
     }

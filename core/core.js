@@ -14,7 +14,16 @@ module.exports = class extends base{
 
     setManagers(){
         this.managers = new objects()
-        this.isReady()
+
+        this.managers.whenReady(
+            ()=>{
+                this.ready = 1
+            }
+        )
+    }
+
+    getObject(name){
+        return this.managers.objs.hasOwnProperty(name) ? this.managers.objs[name] : null
     }
 
     constructor(){

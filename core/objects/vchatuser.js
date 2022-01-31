@@ -1,16 +1,10 @@
 const base = require(require('path').join(__dirname,'base'))
 module.exports = class extends base{
-    // vChat
-
-
-    assignData(data){
-        this.data = data
-    }
-
+    //Usr
 
     constructor(data){
-        super()
-        this.assignData()
+        super(data)
     }
+
 
 }

@@ -2,10 +2,11 @@ module.exports = class{
     //Evts
 
     registerTrigger(tn,cb){
+        let callback = cb
         this.triggers[tn] = {
             name:tn,
-            getCb:function(cb){
-                return cb
+            getCb:()=>{
+                return callback
             }
         }
     }
@@ -35,7 +36,7 @@ module.exports = class{
     }
 
     getTrigger(tn){
-        return this.callbacks.hasOwnProperty(tn)?this.callbacks[tn]:null
+        return this.triggers.hasOwnProperty(tn)?this.triggers[tn]:null
     }
 
 
@@ -59,12 +60,12 @@ module.exports = class{
 
                     
                     if(this.getTrigger(triggername)){
-                        this.doTrigger(triggername,this.getTrigger(triggername),data)
+                        this.doTrigger(triggername,this.getTrigger(triggername).getCb(),data)
                     }else{
                         let interv = setInterval(
                             ()=>{
                                 if(this.getTrigger(triggername)){
-                                    this.doTrigger(triggername,this.getTrigger(triggername),data)
+                                    this.doTrigger(triggername,this.getTrigger(triggername).getCb(),data)
                                     clearInterval(interv)
                                 }
                             }
@@ -87,7 +88,6 @@ module.exports = class{
             Object.keys(this.triggers).forEach(
                 tn=>{
                     if(this.triggered.hasOwnProperty(tn)){
-                        console.log('tam')
                         this.triggered[tn].trigger(...this.triggered[tn].data)
                         delete(this.triggered[tn])
                     }
