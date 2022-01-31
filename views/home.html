@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/home.css">
+    <title>Document</title>
+</head>
+<body>
+    <section id='videocall'>
+        <section id='members'>
+            <ul id='list'>
+                <div id='me' class="member">
+                    <section id='myview' class="view">
+                        <label for="me">
+                            me
+                        </label>
+                        <figure id='mine' class="videobox">
+                            <video></video>
+                        </figure>
+                    </section>
+                </div>
+            </ul>
+        </section>
+        <section id='controls'>
+            <div class="control">
+                <button id='start'>
+                    commencer
+                </button>
+            </div>
+        </section>
+    </section>
+    <section id='videocalls'>
+        <em>videochats en cours</em>
+        <ul class='list'>
+        </ul>
+        <fieldset>
+            <input type="text" name="convname" placeholder="nom du nouveau chat" id="chatnameinput">
+            <input type="button" value='creer un videochat' id="create">
+        </fieldset>
+    </section>
+    <script src='/sio'>
+    </script>
+    <script src='/js/socket.js'>
+    </script>
+    <script src='/js/master.js'>
+    </script>
+</body>
+</html>

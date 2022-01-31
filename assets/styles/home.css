@@ -1,0 +1,147 @@
+body{
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+#videocall{
+    display: flex;
+    flex-direction: column;
+    width: 96%;
+    height: 76%;
+    padding: 2%;
+    margin: 0;
+}
+#videocall #controls{
+    display:flex;
+    width: 100%;
+    flex-direction: row;
+    height: 20%;
+    padding: 0;
+}
+#videocall #controls .control{
+    margin: 2%;
+    height: 96%;
+    width: 16%;
+}
+#videocall #controls .control button{
+    width: 100%;
+    height: 60%;
+    margin: 0;
+    padding: 0;
+    border-radius: 2.5em;
+    background: #000022;
+    color: yellowgreen;
+    font-weight: bolder;
+    font-size: 14px;
+    cursor: pointer;
+}
+#videocall #members{
+    display:flex;
+    width: 100%;
+    flex-direction: column;
+    height: 80%;
+    padding: 0;
+}
+#videocall #members #list{
+    display: flex;
+    flex-direction: row;
+    overflow:hidden;
+    overflow-x: scroll;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background: #000022;
+}
+#videocall #members .member{
+    display: flex;
+    padding: 0.5%;
+    margin: 0.5%;
+    height: 98%;
+    width: 48%;
+}
+#videocall #members .member .view{
+    display: flex;
+    background: red;
+    width:100%;
+    height: 98%;
+    padding: 0;
+    margin: 0;
+}
+#videocall #members .member .view .videobox,#videocall #members .member .view .videobox video{
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+#videocalls{
+    background: #000022;
+    padding: 1%;
+    width:98%;
+    height: 18%;
+    display: flex;
+    flex-direction: row;
+}
+#videocalls > *{
+    height: 65%;
+    padding: 0;
+    margin: 0;
+}
+#videocalls .list{
+    display: flex;
+    width: 80%;
+    height: 58%;
+    padding: 0.5%;
+    background: red;
+    flex-direction: row;
+    overflow: hidden;
+    overflow-x: scroll;
+}
+#videocalls fieldset{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    border: none;
+    height: 68%;
+}
+#videocalls fieldset > *{
+    padding: 0;
+    margin: 0;
+}
+
+#videocalls fieldset input{
+    height: 70%;
+    padding: 2%;    
+    border-bottom-right-radius: 0.6em;
+}
+#videocalls fieldset #chatnameinput{
+    height: 50%;
+    border-radius: 0;
+    border-top-right-radius: 0.6em;
+}
+#videocalls .videocall{
+    width:11%;
+    height:11%;
+    padding: 2%;
+    background: gray;
+}
+#videocalls em{
+    display: flex;
+    color:blueviolet;
+    height: 58%;
+    padding: 0.5%;
+    flex-direction: column;
+}
+@media screen and  (max-width:997px){
+    
+    #videocall #members .member{
+        display: flex;
+        padding: 0.5%;
+        margin: 0.5%;
+        height: 98%;
+        width: 98%;
+    }
+
+}
