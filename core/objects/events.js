@@ -44,7 +44,11 @@ module.exports = class extends base{
                 }
             ]
         ]
-        
+        actions.forEach(
+            ([name,callback])=>{
+                this.actions[name] = callback
+            }
+        )
     }
 
     constructor(){
@@ -53,7 +57,7 @@ module.exports = class extends base{
         this.callbacks= {}
         this.actions={}
         this.setBaseActions()
-    
+        console.log('we can do ...',this.actions)
     
     }
 

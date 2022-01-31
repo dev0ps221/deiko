@@ -8,7 +8,7 @@ const path = require('path')
 const sio  = require('socket.io')
 const io   = sio()
 const chats = []
-
+const core = require(path.join(__dirname,'core/core'))
 function get(socket,...data){
     socket.on(
         ...data
