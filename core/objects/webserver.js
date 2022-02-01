@@ -53,7 +53,7 @@ module.exports = class extends base{
         return found
     }
 
-    configureIo(clisocket){
+    configureIo(clisocket,deebee){
 
 
 
@@ -84,7 +84,7 @@ module.exports = class extends base{
                 let sockconvs = []
                 let username = null
                 let sockname = `sock#${this.sockets.length+1}`
-                let sock     = new clisocket({sockname,socket,username:null})
+                let sock     = new clisocket({sockname,socket,username:null,deebee})
 
                 this.sockets.push(sock)
 

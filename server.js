@@ -17,14 +17,13 @@ core.whenReady(
         core.server = new (core.getObject('webserver'))({server,io,express,chats,io,app,root,path,port})
         core.server.whenReady(
             ()=>{
-                console.log('vweb server is ready to start')
                 core.server.listen()
             }
         )
         core.server.when(
             'listening',(server)=>{
                 console.log('server listening on ...',server.port)
-                core.server.configureIo(core.getObject('clisocket'))
+                core.server.configureIo(core.getObject('clisocket'),core.deebee)
             }
         )
     }

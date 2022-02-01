@@ -18,12 +18,24 @@ module.exports= class extends base{
         this.setListener(
             'dologin',({username,password})=>{
                 console.log(username,password,' lets login')
+                this.deebee.___login(username,password,(e,r)=>{
+                    if(e)console.log(e)
+                    else{
+                        console.log(r)
+                    }
+                })
             }
         )
 
         this.setListener(
             'doregister',({username,password})=>{
                 console.log(username,password,' lets register')
+                this.deebee.___register(username,password,(e,r)=>{
+                    if(e)console.log(e)
+                    else{
+                        console.log(r)
+                    }
+                })
             }
         )
 
