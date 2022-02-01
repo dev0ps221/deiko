@@ -5,12 +5,27 @@ module.exports= class extends base{
     //CliSocket
 
     setListener(name,func){
-        this.setListener(
+        this.socket.off(
+            name,func
+        )
+        this.socket.on(
             name,func
         )
     }
 
     setListeners(){
+
+        this.setListener(
+            'dologin',({username,password})=>{
+                console.log(username,password,' lets login')
+            }
+        )
+
+        this.setListener(
+            'doregister',({username,password})=>{
+                console.log(username,password,' lets register')
+            }
+        )
 
         this.setListener(
             'conversation'
@@ -84,5 +99,6 @@ module.exports= class extends base{
 
     constructor(data){
         super(data)
+        this.setListeners()
     }
 }

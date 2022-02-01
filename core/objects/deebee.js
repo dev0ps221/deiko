@@ -171,6 +171,7 @@ class DeeBee{
     ];
     return this._updateReq(table,fields_,vals_,conds);
   }
+  
   ___loginreq(table,user,pass){
     return this._req("select",table,["id",this._getUsersLogField()],[],[[this._getUsersLogField(),this._getUsersPasswField()],["'"+user+"'",`password('${pass}')`]]);
   }

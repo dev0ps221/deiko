@@ -17,7 +17,8 @@ module.exports = class extends base{
         const {MSQP,MSQH,MSQD,MSQU} = process.env
         
         this.deebee   = new (this.getObject('DeeBee'))({user:MSQU,host:MSQH,password:MSQP,database:MSQD}) 
-
+        this.deebee._setUsersLogField('users')
+        this.deebee._setUsersPasswField()
         this.managers.whenReady(
             ()=>{
                 this.ready = 1

@@ -1,6 +1,8 @@
 const formbuttons = document.querySelectorAll('#loginforms #form #buttons button')
 const formview   = document.querySelector('#loginforms #form #content .data')
 const formlegend   = document.querySelector('#loginforms #form #content legend')
+const actionbutton   = document.querySelector('#loginforms #action button')
+
 let viewData = {
     register:{
         username:null,password:null
@@ -14,6 +16,16 @@ function updateViewData(){
     const password = document.querySelector('#password') ? document.querySelector('#password').value : null
     viewData[getActualFormView()] = {
         username,password
+    }
+}
+
+function postViewData(){
+    updateViewData()
+    const {username,password} = viewData[getActualFormView()]
+    if(username&&password){
+        post(
+            `do${getActualFormView()}`,({username,password})
+        )
     }
 }
 
@@ -118,6 +130,7 @@ function showActualFormView(){
     if(document.querySelector('#password'))document.querySelector('#password').value = ""
     updateViewData()
     showView[getActualFormView()]()
+    listenSubmitData()
 }
 function listenFormViewSwitchs(){
     formbuttons.forEach(
@@ -126,6 +139,15 @@ function listenFormViewSwitchs(){
                 'click',switchActualView
             )
         }
+    )
+}
+
+function listenSubmitData(){
+    actionbutton.removeEventListener(
+        'click',postViewData
+    )
+    actionbutton.addEventListener(
+        'click',postViewData
     )
 }
 listenFormViewSwitchs()
