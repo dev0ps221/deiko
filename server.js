@@ -11,6 +11,7 @@ const chats = []
 const core = new (require(path.join(__dirname,'core/core')))
 const root = path.join(__dirname)
 
+
 core.whenReady(
     ()=>{
         core.server = new (core.getObject('webserver'))({server,io,express,chats,io,app,root,path,port})
