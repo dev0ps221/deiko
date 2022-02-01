@@ -55,11 +55,12 @@
     cursor: pointer;
 }
 
-#loginforms #form #buttons button.actual:hover,#loginforms #form #buttons button:hover,#loginforms #action button:hover{
-    background: var(--actionbuttonbg);
-}
-#loginforms #form #buttons button.actual{
+#loginforms #form #buttons button.actual:hover,#loginforms #form #buttons button:hover{
     background: var(--activebuttonbg);
+}
+
+#loginforms #form #buttons button.actual,#loginforms #action button:hover{
+    background: var(--actionbuttonbg);
 }
 
 #loginforms #action{
