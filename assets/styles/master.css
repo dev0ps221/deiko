@@ -1,0 +1,15 @@
+:root{
+    --bgbg:#24221c;
+    --fgbg:#484537;
+    --bgfg:#504416;
+    --fgfg:#c8ab37;
+}
+body{
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--bgbg);
+    color: var(--fgfg);
+}

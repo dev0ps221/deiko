@@ -53,7 +53,7 @@ module.exports = class extends base{
         return found
     }
 
-    configureIo(){
+    configureIo(clisocket){
 
 
 
@@ -84,78 +84,10 @@ module.exports = class extends base{
                 let sockconvs = []
                 let username = null
                 let sockname = `sock#${this.sockets.length+1}`
-                this.sockets.push({sockname,socket,username:null})
-                this.get(
-                    socket
-                    ,'username'
-                    ,(data)=>{
-                        console.log('got username')
-                        username = data.username
-                        if(this.getSocket(sockname)){
-                            this.getSocket(sockname).username = username
-                        }
-                        this.users.push(data)
-                        this.post(socket,'username',data)
-                    }
-                )
-                this.get(
-                    socket
-                    ,'conversation'
-                    ,(data)=>{
-                        this.conversations.push(
-                            {id:this.conversations.length+1,name:`${data.chatname}#${this.conversations.length+1}`,members:[data]}
-                        )
-                        sockconvs.push(
-                            {id:this.conversations.length+1,name:`${data.chatname}#${this.conversations.length+1}`,members:[data]}
-                        )
-                        
-                        this.post(socket,'/conversation',data)
-                        socket.broadcast.emit(
-                            'conversations',this.conversations
-                        )
-                        socket.emit(
-                            'conversations',this.conversations
-                        )
-                    }
-                )
-                this.get(
-                    socket
-                    ,'joinConversation'
-                    ,data=>{
-                        let conv = getConversation(data.chatname)
-                        if(conv){
-                            
-                            conv.members.push(data)
-                            
-                            this.post(socket,'/conversation',data)
-                            
-                            post(
-                                socket
-                                ,'joinConversation'
-                                ,conv
-                            )
+                let sock     = new clisocket({sockname,socket,username:null})
 
-                            conv.members.forEach(
-                                member=>{
-                                    
-                                    console.log(member.username)
-                                    
-                                    if(getSocketByUser(member.username)) getSocketByUser(member.username).socket.emit(
-                                        '/actualconversation',conv
-                                    )
+                this.sockets.push(sock)
 
-                                }
-                            )
-
-                            socket.broadcast.emit(
-                                'conversations',this.conversations
-                            )
-                            socket.emit(
-                                'conversations',this.conversations
-                            )
-                        }
-                    }
-                )
                 socket.broadcast.emit(
                     'conversations',this.conversations
                 )
@@ -172,6 +104,14 @@ module.exports = class extends base{
 
         this.app.get(
             '/',(req,res)=>{
+                res.sendFile(
+                    path.join(this.root,'views','index.html')
+                )
+            }
+        )
+
+        this.app.get(
+            '/home',(req,res)=>{
                 res.sendFile(
                     path.join(this.root,'views','home.html')
                 )

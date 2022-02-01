@@ -12,11 +12,15 @@ module.exports = class extends base{
     }
 
     setObjects(){
+
         this.objs = {
             vchat : require(path.join(objectspath,'vchat'))
             ,vuser : require(path.join(objectspath,'vchatuser'))
             ,webserver : require(path.join(objectspath,'webserver'))
+            ,clisocket : require(path.join(objectspath,'clisocket'))
+            ,DeeBee : require(path.join(objectspath,'deebee'))
         }
+        
     }
 
     constructor(){

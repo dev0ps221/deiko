@@ -23,7 +23,7 @@ core.whenReady(
         core.server.when(
             'listening',(server)=>{
                 console.log('server listening on ...',server.port)
-                core.server.configureIo()
+                core.server.configureIo(core.getObject('clisocket'))
             }
         )
     }

@@ -1,0 +1,103 @@
+:root{
+    --loginbg:#2b2200;
+    --textbg:#aa8800;
+    --textfg:#2b2200;
+    --formsbg:#554400;
+    --buttonbg:#806600;
+    --activebuttonbg:#aa8800;
+    --actionbuttonbg:#ffcc00;
+}
+#login{
+    user-select: none;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    background: var(--loginbg);
+    color: var(--textfg);
+}
+#loginforms{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width:56%;
+}
+#loginforms #logo{
+    height: 40%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+#loginforms #logo img{
+    width:20%;
+}
+#loginforms #form{
+    display: flex;
+    flex-direction: column;
+    margin-left: 10%;
+    height: 40%;
+    background: var(--formsbg);
+}
+#loginforms #form #buttons{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#loginforms #form #buttons button,#loginforms #action button{
+    font-weight: bolder;
+    width:49.25%;
+    font-size: 1em;
+    padding: 2.5%;
+    background: var(--buttonbg);
+    border: none;
+    cursor: pointer;
+}
+
+#loginforms #form #buttons button.actual:hover,#loginforms #form #buttons button:hover,#loginforms #action button:hover{
+    background: var(--actionbuttonbg);
+}
+#loginforms #form #buttons button.actual{
+    background: var(--activebuttonbg);
+}
+
+#loginforms #action{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-left: 10%;
+}
+
+
+#logintext{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height:100%;
+    width:44%;
+    background: var(--textbg);
+}
+#logintext #text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding:0;
+    padding-left: 8%;
+    padding-right: 8%;
+    width:84%;
+    height:40%;
+}
+#logintext #slide{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width:100%;
+    height:60%;
+    background: var(--loginbg);
+}
+#logintext #text > p{
+    margin:2%;
+    text-align: center;
+    font-size: 1.2em;
+}

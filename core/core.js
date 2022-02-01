@@ -14,6 +14,9 @@ module.exports = class extends base{
 
     setManagers(){
         this.managers = new objects()
+        const {MSQP,MSQH,MSQD,MSQU} = process.env
+        
+        this.deebee   = new (this.getObject('DeeBee'))({user:MSQU,host:MSQH,password:MSQP,database:MSQD}) 
 
         this.managers.whenReady(
             ()=>{
