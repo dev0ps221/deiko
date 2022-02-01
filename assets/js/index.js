@@ -150,5 +150,21 @@ function listenSubmitData(){
         'click',postViewData
     )
 }
+
+
+get(
+    'registerFail',message=>{
+        alert(message)
+    }
+)
+
+get(
+    'loginSuccess',r=>{
+        document.cookie = `connected=${JSON.stringify(r).toString()}`
+        document.location.reload()
+    }
+)
+
 listenFormViewSwitchs()
 showActualFormView()
+if(isConnected()) document.location.href='/home'

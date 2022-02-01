@@ -129,9 +129,6 @@ get(
         updateConversations()
     }
 )
-post(
-    'username',{username:prompt('Quel est votre nom pour la conversation')}
-)
 get(
     'username',data=>{
         post(
@@ -146,4 +143,14 @@ create.addEventListener(
     }
 )
 listeninterval = setInterval(listenReadyForChat,1000)    
-
+function setMyData(){
+    document.self = JSON.parse(COOKIES()['connected'])
+    document.querySelector('#myview label').innerText = document.self.name
+    post(
+        'userdata',document.self
+    )
+}
+if(!isConnected())document.location.href='/'
+else{
+    setMyData()
+}

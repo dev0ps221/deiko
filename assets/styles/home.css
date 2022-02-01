@@ -56,7 +56,6 @@
 }
 #videocall #members .member .view{
     display: flex;
-    background: red;
     width:100%;
     height: 98%;
     padding: 0;

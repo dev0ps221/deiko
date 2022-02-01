@@ -1,8 +1,8 @@
 :root{
-    --bgbg:#24221c;
-    --fgbg:#484537;
-    --bgfg:#504416;
-    --fgfg:#c8ab37;
+    --bgbg:#2b2200;
+    --fgbg:#554400;
+    --bgfg:#2b2200;
+    --fgfg:#aa8800;
 }
 body{
     margin: 0;

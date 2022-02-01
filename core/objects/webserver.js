@@ -117,6 +117,14 @@ module.exports = class extends base{
                 )
             }
         )
+
+        this.app.get(
+            '/logout',(req,res)=>{
+                res.sendFile(
+                    path.join(this.root,'views','logout.html')
+                )
+            }
+        )
         
 
     }
