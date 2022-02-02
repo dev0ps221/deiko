@@ -139,7 +139,7 @@ get(
 )
 create.addEventListener(
     'click',e=>{
-        chatnameinput.value? post('conversation',{chatname:chatnameinput.value,username:window.username}): null
+        chatnameinput.value? post('newConversation',chatnameinput.value): null
     }
 )
 listeninterval = setInterval(listenReadyForChat,1000)    

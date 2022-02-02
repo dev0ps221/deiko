@@ -4,7 +4,6 @@ const base = require(path.join(__dirname,'base'))
 module.exports = class extends base{
     //webserver
 
-
     configureApp(){
 
         this.app.use(
@@ -78,6 +77,7 @@ module.exports = class extends base{
         this.io.listen(this.server)
         this.io.on(
             'connection',(socket)=>{
+
                 let sockconvs = []
                 let username = null
                 let sockname = `sock#${this.sockets.length+1}`
@@ -91,6 +91,7 @@ module.exports = class extends base{
                 socket.emit(
                     'conversations',this.conversations
                 )
+
             }
         )
     }
@@ -126,7 +127,7 @@ module.exports = class extends base{
     }
 
     configureDeeBee(){
-        
+
         this.deebee = this.core.deebee
         
         this.deebee._____registerAction(
@@ -152,8 +153,8 @@ module.exports = class extends base{
         )
 
         this.deebee._____registerAction(
-            'insertConversation',(name,cb)=>{
-                const req = this.__insertReq(
+            'insertConversation',function(name,cb){
+                const req = this.__insertINTO(
                     'conversations',['name'],[`'${name}'`]    
                 )
                 this.db.query(
@@ -162,6 +163,17 @@ module.exports = class extends base{
             }
         )
 
+
+        this.deebee._____registerAction(
+            'joinConversation',function (id_conversation,id_user,cb){
+                const req = this.__insertReq(
+                    'conversation_members',['id_conversation','id_user'],[id_conversation,id_user]
+                )
+                this.db.query(
+                    req,cb
+                )
+            }
+        )
     }
 
     setConversations(cb){
@@ -170,27 +182,37 @@ module.exports = class extends base{
             (e,conversations)=>{
                 if(e){
                     console.log(e)
-                    if(cb)cb()
+                    if(cb)cb(this.conversations)
                 }else{
                     if(conversations && conversations.length){
                         conversations.forEach(
                             (conversation,idx)=>{
                                 conversation.deebee = this.deebee
-                                this.conversations.push(new (this.core.getObject('vchat'))(conversation))
-                                if(idx+1==conversations.length){
-                                    if(cb)cb()
-                                }
+                                let conv = new (this.core.getObject('vchat'))(conversation)
+                                conv.whenReady(
+                                    ()=>{
+                                        this.conversations.push(conv)
+                                        if(idx+1==conversations.length){
+                                            if(cb)cb(this.conversations)
+                                        }
+                                    }
+                                )
                             }
                         )
                     }else{
-                        if(cb)cb()
+                        if(cb)cb(this.conversations)
                     }
                 }
             }
         )
     }
 
-    getConversations(){
+    getConversations(cb){
+        if(cb){
+            this.setConversations(
+                cb
+            )
+        }
         return this.conversations
     }
 

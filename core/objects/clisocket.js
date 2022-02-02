@@ -85,7 +85,38 @@ module.exports= class extends base{
     
         this.setListener(
             'newConversation',conversationName=>{
-                
+                this.deebee.insertConversation(conversationName,(e,r)=>{
+                    if(e){
+                        console.log(e)
+                    }else{
+                        if(r.insertId){
+                            this.deebee.joinConversation(
+                                r.insertId,this.userdata.id,(er,re)=>{
+                                    if(er)console.log(er)
+                                    else{
+                                        console.log(re)
+                                    }
+                                    this.getConversations()
+                                }
+                            )
+                            this.getConversations()
+                        }
+                    }
+                })
+            }
+        )
+    }
+
+    getConversations(){
+        this.core.server.getConversations(
+            (conversations)=>{
+                if(e)console.log(e)
+                else{
+                    this.socket.emit(
+                        'conversations'
+                        ,conversations.map(conv=>conv.get())
+                    )
+                }
             }
         )
     }

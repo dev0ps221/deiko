@@ -58,6 +58,13 @@ module.exports = class extends base{
         return this.members
     }
 
+    get(){
+        const {name,members,id} = this
+        return {
+            name,members,id
+        }
+    }
+
     setDeeBeeActions(){
 
         this.deebee._____registerAction(
@@ -90,12 +97,8 @@ module.exports = class extends base{
 
 
     constructor(data){
-        super()
-        this.assignData(
-            ()=>{
-                this.setDeeBeeActions()
-            }
-        )
+        super(data)
+        this.setDeeBeeActions()
     }
 
 }
