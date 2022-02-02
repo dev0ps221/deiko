@@ -6,8 +6,9 @@ module.exports= class extends base{
 
 
     userData({name,id}){
-        this.userid = id
         this.userdata = {name,id}
+        this.userid = this.userdata.id
+        this.id     = this.userid
         console.log('got my data')
     }
 
@@ -30,7 +31,6 @@ module.exports= class extends base{
                     'loginFail',e
                 )
             }else{
-                console.log(r)
                 if(!r.length){
                     e = 'echec de la connexion réessayez plus tard..'
                     sock.emit(
@@ -108,15 +108,13 @@ module.exports= class extends base{
     }
 
     getConversations(){
-        this.core.server.getConversations(
+        this.server.getConversations(
             (conversations)=>{
-                if(e)console.log(e)
-                else{
-                    this.socket.emit(
-                        'conversations'
-                        ,conversations.map(conv=>conv.get())
-                    )
-                }
+                console.log(conversations)
+                this.socket.emit(
+                    'conversations'
+                    ,conversations.map(conv=>conv.get())
+                )
             }
         )
     }
@@ -134,5 +132,6 @@ module.exports= class extends base{
     constructor(data){
         super(data)
         this.setListeners()
+        this.getConversations()
     }
 }

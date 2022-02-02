@@ -48,11 +48,15 @@ function listenReadyForChat(){
 
 }
 
-function addToConvList(conversation){
-    
+function addToConvList(conversation,idx){
+    const isactual = window.actualconvIdx == idx
+    console.log(conversation)
+    // function joinConversation(){
+    //     post('joinConversation',{chatname:conversation.name,username:window.username})
+    // }
 
-    function joinConversation(){
-        post('joinConversation',{chatname:conversation.name,username:window.username})
+    function showConversation(){
+        startMyVideo()
     }
     let convelem = document.createElement('li')
     convelem.classList.add('videocall')
@@ -61,14 +65,17 @@ function addToConvList(conversation){
     convname.classList.add('videocall-name')
     convelem.appendChild(convname)
     
-    let convjoin = document.createElement('button')
-    convjoin.innerText = 'join'
-    convjoin.classList.add('videocall-join')
-    convelem.appendChild(convjoin)
-    
-    convjoin.addEventListener(
-        'click',joinConversation
-    )
+    if(isactual) convelem.classList.add('actual')
+    else{
+        let convshow = document.createElement('button')
+        convshow.innerText = 'show'
+        convshow.classList.add('videocall-show')
+        convelem.appendChild(convshow)
+        
+        convshow.addEventListener(
+            'click',showConversation
+        )
+    }
 
     videocalls.querySelector('.list').appendChild(convelem)
 
@@ -125,6 +132,9 @@ get(
 )
 get(
     'conversations',(conversations)=>{
+        if(conversations.length){
+            window.actualconvIdx = window.hasOwnProperty('actualconvIdx') ? 0 : window.hasOwnProperty('actualconvIdx') 
+        }
         window.conversations = conversations
         updateConversations()
     }

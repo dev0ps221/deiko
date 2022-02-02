@@ -73,7 +73,7 @@ module.exports = class extends base{
         return found
     }
 
-    configureIo(clisocket,deebee,server){
+    configureIo(clisocket,deebee){
         this.io.listen(this.server)
         this.io.on(
             'connection',(socket)=>{
@@ -81,16 +81,9 @@ module.exports = class extends base{
                 let sockconvs = []
                 let username = null
                 let sockname = `sock#${this.sockets.length+1}`
-                let sock     = new clisocket({sockname,socket,username:null,deebee,server})
+                let sock     = new clisocket({sockname,socket,username:null,deebee,server:this})
 
                 this.sockets.push(sock)
-
-                socket.broadcast.emit(
-                    'conversations',this.conversations
-                )
-                socket.emit(
-                    'conversations',this.conversations
-                )
 
             }
         )
@@ -166,7 +159,7 @@ module.exports = class extends base{
 
         this.deebee._____registerAction(
             'joinConversation',function (id_conversation,id_user,cb){
-                const req = this.__insertReq(
+                const req = this.__insertINTO(
                     'conversation_members',['id_conversation','id_user'],[id_conversation,id_user]
                 )
                 this.db.query(
@@ -191,15 +184,18 @@ module.exports = class extends base{
                                 let conv = new (this.core.getObject('vchat'))(conversation)
                                 conv.whenReady(
                                     ()=>{
+                                        console.log('finga neh')
                                         this.conversations.push(conv)
                                         if(idx+1==conversations.length){
                                             if(cb)cb(this.conversations)
                                         }
+
                                     }
                                 )
                             }
                         )
                     }else{
+                        console.log('fi deh la neh',conversations)
                         if(cb)cb(this.conversations)
                     }
                 }

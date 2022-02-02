@@ -4,18 +4,18 @@ module.exports = class extends base{
 
 
     assignData(data,cb=null){
+        this.id = data.id
         this.data = data
         this.conversationid = data.id
         this.members = []
-        this.setMembers(
-            cb
-        )
+        if(cb)cb()
     }
 
     setMembers(cb){
         this.members = []
         this.deebee.getConversationMembers(
             (e,members)=>{
+                console.log('jarnga fii deh')
                 if(e){
                     console.log(e)
                     if(cb)cb()
@@ -66,12 +66,12 @@ module.exports = class extends base{
     }
 
     setDeeBeeActions(){
-
+        const conversationid = this.conversationid
         this.deebee._____registerAction(
             'getConversationMembers',
-            (cb)=>{
+            function(cb){
                 const req = this.__selectFrom(
-                    'conversations',['*'],[['id_conversation'],[this.conversationid]]
+                    'conversation_members',['*'],[['id_conversation'],[conversationid]]
                 )
                 this.db.query(
                     req,cb
@@ -81,7 +81,8 @@ module.exports = class extends base{
 
 
         this.deebee._____registerAction(
-            'getMember',(id,cb)=>{
+            'getMember',
+            function(id,cb){
                 const req = this.__selectFrom(
                     'users',['id','name'],[['id'],[id]]
                 )
@@ -91,14 +92,24 @@ module.exports = class extends base{
             }
         )
 
-        this.ready = 1
-    
     }
 
 
     constructor(data){
         super(data)
         this.setDeeBeeActions()
+        this.assignData(
+            data,
+            ()=>{
+                this.setDeeBeeActions()
+                
+                this.setMembers(
+                    ()=>{
+                        this.ready = 1
+                    }
+                )
+            }
+        )
     }
 
 }
