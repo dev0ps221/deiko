@@ -14,7 +14,7 @@ const root = path.join(__dirname)
 
 core.whenReady(
     ()=>{
-        core.server = new (core.getObject('webserver'))({server,io,express,chats,io,app,root,path,port})
+        core.server = new (core.getObject('webserver'))({server,io,express,chats,io,app,root,path,port,core})
         core.server.whenReady(
             ()=>{
                 core.server.listen()
@@ -23,7 +23,7 @@ core.whenReady(
         core.server.when(
             'listening',(server)=>{
                 console.log('server listening on ...',server.port)
-                core.server.configureIo(core.getObject('clisocket'),core.deebee)
+                core.server.configureIo(core.getObject('clisocket'),core.deebee,core.server)
             }
         )
     }

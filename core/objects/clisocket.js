@@ -7,7 +7,7 @@ module.exports= class extends base{
 
     userData({name,id}){
         this.userid = id
-        this.data = {name,id}
+        this.userdata = {name,id}
         console.log('got my data')
     }
 
@@ -39,7 +39,7 @@ module.exports= class extends base{
                     return
                 }
                 sock.emit(
-                    'loginSuccess',r
+                    'loginSuccess',r[0]
                 )
             }
         }
@@ -83,6 +83,11 @@ module.exports= class extends base{
             }
         )
     
+        this.setListener(
+            'newConversation',conversationName=>{
+                
+            }
+        )
     }
 
     joinRoom(roomname){

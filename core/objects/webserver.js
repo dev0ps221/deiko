@@ -53,38 +53,35 @@ module.exports = class extends base{
         return found
     }
 
-    configureIo(clisocket,deebee){
+    getSocketByUser(name){
+        let found = null
+        this.sockets.forEach(
+            sock=>{
+                if(sock.userdata.name == name) found = sock
+            }
+        )
+        return found
+    }
 
 
+    getConversation(name){
+        let found = null 
+        this.conversations.forEach(
+            conv=>{
+                if(conv.name == name) found = conv
+            }
+        )
+        return found
+    }
 
-        function getSocketByUser(name){
-            let found = null
-            this.sockets.forEach(
-                sock=>{
-                    if(sock.username == name) found = sock
-                }
-            )
-            return found
-        }
-
-
-        function getConversation(name){
-            let found = null 
-            this.conversations.forEach(
-                conv=>{
-                    if(conv.name == name) found = conv
-                }
-            )
-            return found
-        }
-
+    configureIo(clisocket,deebee,server){
         this.io.listen(this.server)
         this.io.on(
             'connection',(socket)=>{
                 let sockconvs = []
                 let username = null
                 let sockname = `sock#${this.sockets.length+1}`
-                let sock     = new clisocket({sockname,socket,username:null,deebee})
+                let sock     = new clisocket({sockname,socket,username:null,deebee,server})
 
                 this.sockets.push(sock)
 
@@ -96,7 +93,6 @@ module.exports = class extends base{
                 )
             }
         )
-
     }
 
 
@@ -129,6 +125,75 @@ module.exports = class extends base{
 
     }
 
+    configureDeeBee(){
+        
+        this.deebee = this.core.deebee
+        
+        this.deebee._____registerAction(
+            'getConversations',function(cb){
+                const req = this.__selectFrom(
+                    'conversations',['*'],[[],[]]
+                )
+                this.db.query(
+                    req,cb
+                )
+            }
+        )
+
+        this.deebee._____registerAction(
+            'getConversation',function(id,cb){
+                const req = this.__selectFrom(
+                    'conversations',['*'],[['id'],[id]]
+                )
+                this.db.query(
+                    req,cb
+                )
+            }
+        )
+
+        this.deebee._____registerAction(
+            'insertConversation',(name,cb)=>{
+                const req = this.__insertReq(
+                    'conversations',['name'],[`'${name}'`]    
+                )
+                this.db.query(
+                    req,cb
+                )
+            }
+        )
+
+    }
+
+    setConversations(cb){
+        this.conversations = []
+        this.deebee.getConversations(
+            (e,conversations)=>{
+                if(e){
+                    console.log(e)
+                    if(cb)cb()
+                }else{
+                    if(conversations && conversations.length){
+                        conversations.forEach(
+                            (conversation,idx)=>{
+                                conversation.deebee = this.deebee
+                                this.conversations.push(new (this.core.getObject('vchat'))(conversation))
+                                if(idx+1==conversations.length){
+                                    if(cb)cb()
+                                }
+                            }
+                        )
+                    }else{
+                        if(cb)cb()
+                    }
+                }
+            }
+        )
+    }
+
+    getConversations(){
+        return this.conversations
+    }
+
     constructor(data){
         super(data)
         this.sockets = []
@@ -136,7 +201,12 @@ module.exports = class extends base{
         this.conversations = []
         this.configureApp()
         this.configureRoutes()
-        this.ready = 1
+        this.configureDeeBee()
+        this.setConversations(
+            ()=>{
+                this.ready = 1
+            }
+        )
     }
 
 
