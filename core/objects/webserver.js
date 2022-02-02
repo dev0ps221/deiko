@@ -73,6 +73,17 @@ module.exports = class extends base{
         return found
     }
 
+    getConversationById(id){
+        let found = null 
+        this.conversations.forEach(
+            conv=>{
+                console.log(conv,' is conv')
+                if(conv.id == id) found = conv
+            }
+        )
+        return found
+    }
+
     configureIo(clisocket,deebee){
         this.io.listen(this.server)
         this.io.on(
@@ -104,6 +115,14 @@ module.exports = class extends base{
             '/home',(req,res)=>{
                 res.sendFile(
                     path.join(this.root,'views','home.html')
+                )
+            }
+        )
+
+        this.app.get(
+            '/vchat',(req,res)=>{
+                res.sendFile(
+                    path.join(this.root,'views','vchat.html')
                 )
             }
         )
@@ -195,7 +214,6 @@ module.exports = class extends base{
                             }
                         )
                     }else{
-                        console.log('fi deh la neh',conversations)
                         if(cb)cb(this.conversations)
                     }
                 }

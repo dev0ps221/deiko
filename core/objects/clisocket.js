@@ -82,6 +82,12 @@ module.exports= class extends base{
         )
 
         this.setListener(
+            '/getConv',id=>{
+                this.getVchat(id)
+            }
+        )
+
+        this.setListener(
             'userdata',(data)=>{
                 this.userData(data)
             }
@@ -125,6 +131,13 @@ module.exports= class extends base{
                     ,conversations.map(conv=>conv.get())
                 )
             }
+        )
+    }
+
+    getVchat(id){
+        this.socket.emit(
+            'getConv',
+            this.server.getConversationById(id)
         )
     }
 

@@ -4,67 +4,12 @@ let listeninterval  = null
 let readyForChat    = null
 var context = document.querySelector('canvas').getContext("2d")
 
-function listenStart(){
-    document.querySelector('#start').addEventListener(
-        'click',startMyVideo
-    )
-}
-
-async function startMyVideo(e){
-
-    let camera_stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-	
-    document.querySelector('#myview video').srcObject = camera_stream;
-    document.querySelector('#myview video').play()
-    document.querySelector('#myview video').addEventListener(
-        'stream',e=>{
-            console.log("li ngey share")
-        }
-    )
- 
-    shareMyVideo(camera_stream)
-
-}
-
-async function shareMyVideo(camera_stream){
-
-    window.mystream = setInterval(
-        ()=>{
-            context.drawImage(document.querySelector('#myview video'),0,0,context.width, context.height)
-            post('mystream',{data:document.querySelector('canvas').toDataURL('image/webp'),conv:window.conversations[actualconvIdx].name})
-        }
-    ,120)
-
-}
-
-function listenReadyForChat(){
-
-    if(readyForChat){
-        listenStart()
-        clearInterval(listeninterval)
-        return
-    }
-    if(!window.chatname){
-        if(!listeninterval) listeninterval = setInterval(listeninterval,2000)
-        return
-    }
-    if(listeninterval){
-        readyForChat = 1
-        return
-    }
-
-}
-
 function addToConvList(conversation,idx){
     
     const isactual = window.actualconvIdx == idx
     
-    // function joinConversation(){
-    //     post('joinConversation',{chatname:conversation.name,username:window.username})
-    // }
-
     function showConversation(){
-        startMyVideo()
+        document.location.href=`/vchat#${conversation.id}`
     }
     let convelem = document.createElement('li')
     convelem.classList.add('videocall')
@@ -79,14 +24,8 @@ function addToConvList(conversation,idx){
         'click',showConversation
     )
     
-    if(isactual){
-        convelem.classList.add('actual')
-        convshow.click()
-    }else{
-        
-        convelem.appendChild(convshow)
-    }
-
+    convelem.appendChild(convshow)
+    
     videocalls.querySelector('.list').appendChild(convelem)
 
 }
@@ -98,48 +37,6 @@ function updateConversations(){
         )
     }
 }
-function buildMemberVidView(member){
-
-    const memberbox = document.createElement('div')
-    memberbox.classList.add('member')
-    
-    const viewbox = document.createElement('div')
-    viewbox.classList.add('view')
-    
-    const figurebox = document.createElement('figure')
-    figurebox.classList.add('videobox')
-    
-    const label = document.createElement('label')
-    label.innerHTML = member.username
-
-
-    const video = document.createElement('video')
-    
-    figurebox.appendChild(video)
-    viewbox.appendChild(label)
-    viewbox.appendChild(figurebox)
-    memberbox.appendChild(viewbox)
-    members.querySelector('#list').appendChild(memberbox)
-}
-get(
-    '/conversation',({username,chatname})=>{
-        window.chatname = chatname
-        window.username = username
-    }
-)
-get(
-    '/actualconversation',(conv)=>{
-        window.actualconversation = conv
-        actualconversation.members.forEach(
-            member=>{
-                if(member.username!=window.username){
-                    buildMemberVidView(member)
-                }
-            }
-        )
-
-    }
-)
 get(
     'conversations',(conversations)=>{
         if(conversations.length){
@@ -149,29 +46,13 @@ get(
         updateConversations()
     }
 )
-get(
-    'username',data=>{
-        post(
-            'conversations'
-        )
-        window.username = data.username 
-    }
-)
-get(
-    'userStream',({user,data})=>{
-        console.log('got stream data from user ',user)
-        console.log(data)
-    }
-)
 create.addEventListener(
     'click',e=>{
         chatnameinput.value? post('newConversation',chatnameinput.value): null
     }
 )
-listeninterval = setInterval(listenReadyForChat,1000)    
 function setMyData(){
     document.self = JSON.parse(COOKIES()['connected'])
-    document.querySelector('#myview label').innerText = document.self.name
     post(
         'userdata',document.self
     )
