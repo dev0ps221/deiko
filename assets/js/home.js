@@ -2,6 +2,8 @@
 let conversations = []
 let listeninterval  = null
 let readyForChat    = null
+var context = document.querySelector('canvas').getContext("2d")
+
 function listenStart(){
     document.querySelector('#start').addEventListener(
         'click',startMyVideo
@@ -26,7 +28,12 @@ async function startMyVideo(e){
 
 async function shareMyVideo(camera_stream){
 
-
+    window.mystream = setInterval(
+        ()=>{
+            context.drawImage(document.querySelector('#myview video'),0,0,context.width, context.height)
+            post('mystream',{data:document.querySelector('canvas').toDataURL('image/webp'),conv:window.conversations[actualconvIdx].name})
+        }
+    ,120)
 
 }
 
@@ -49,8 +56,9 @@ function listenReadyForChat(){
 }
 
 function addToConvList(conversation,idx){
+    
     const isactual = window.actualconvIdx == idx
-    console.log(conversation)
+    
     // function joinConversation(){
     //     post('joinConversation',{chatname:conversation.name,username:window.username})
     // }
@@ -64,17 +72,19 @@ function addToConvList(conversation,idx){
     convname.innerText = conversation.name
     convname.classList.add('videocall-name')
     convelem.appendChild(convname)
+    let convshow = document.createElement('button')
+    convshow.innerText = 'show'
+    convshow.classList.add('videocall-show')
+    convshow.addEventListener(
+        'click',showConversation
+    )
     
-    if(isactual) convelem.classList.add('actual')
-    else{
-        let convshow = document.createElement('button')
-        convshow.innerText = 'show'
-        convshow.classList.add('videocall-show')
-        convelem.appendChild(convshow)
+    if(isactual){
+        convelem.classList.add('actual')
+        convshow.click()
+    }else{
         
-        convshow.addEventListener(
-            'click',showConversation
-        )
+        convelem.appendChild(convshow)
     }
 
     videocalls.querySelector('.list').appendChild(convelem)
@@ -133,7 +143,7 @@ get(
 get(
     'conversations',(conversations)=>{
         if(conversations.length){
-            window.actualconvIdx = window.hasOwnProperty('actualconvIdx') ? 0 : window.hasOwnProperty('actualconvIdx') 
+            window.actualconvIdx = window.hasOwnProperty('actualconvIdx') ? window.actualconvIdx : 0  
         }
         window.conversations = conversations
         updateConversations()
@@ -145,6 +155,12 @@ get(
             'conversations'
         )
         window.username = data.username 
+    }
+)
+get(
+    'userStream',({user,data})=>{
+        console.log('got stream data from user ',user)
+        console.log(data)
     }
 )
 create.addEventListener(

@@ -81,7 +81,7 @@ module.exports = class extends base{
                 let sockconvs = []
                 let username = null
                 let sockname = `sock#${this.sockets.length+1}`
-                let sock     = new clisocket({sockname,socket,username:null,deebee,server:this})
+                let sock     = new clisocket({sockname,socket,username:null,deebee,server:this,io:this.io})
 
                 this.sockets.push(sock)
 

@@ -71,6 +71,17 @@ module.exports= class extends base{
         )
 
         this.setListener(
+            'mystream',({data,conv})=>{
+                this.joinRoom(conv)
+                this.doEmit('userStream',{user:this.userdata,data},conv)
+                console.log('let lists all sockets and all conversations')
+                console.log('then compare all conversations members to socket users')
+                console.log('then compare all conversations members to socket users')
+
+            }
+        )
+
+        this.setListener(
             'userdata',(data)=>{
                 this.userData(data)
             }
@@ -78,7 +89,6 @@ module.exports= class extends base{
 
         this.setListener(
             'doregister',({username,password})=>{
-                console.log(username,password,' lets register')
                 this.deebee.___register(username,password,registerCallBack)
             }
         )
@@ -94,7 +104,7 @@ module.exports= class extends base{
                                 r.insertId,this.userdata.id,(er,re)=>{
                                     if(er)console.log(er)
                                     else{
-                                        console.log(re)
+                                        console.log(`user ${this.userdata.id} joined conv#${r.insertId}`)
                                     }
                                     this.getConversations()
                                 }
@@ -110,7 +120,6 @@ module.exports= class extends base{
     getConversations(){
         this.server.getConversations(
             (conversations)=>{
-                console.log(conversations)
                 this.socket.emit(
                     'conversations'
                     ,conversations.map(conv=>conv.get())
